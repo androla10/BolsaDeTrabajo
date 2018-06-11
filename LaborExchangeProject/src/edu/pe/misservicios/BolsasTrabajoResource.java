@@ -1,11 +1,13 @@
 package edu.pe.misservicios;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,7 +20,6 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import edu.pe.beans.Candidato;
 import edu.pe.beans.Oferta;
 import edu.pe.beans.Solicitud;
 import edu.pe.miconexion.SQLConexion;
@@ -70,52 +71,7 @@ public class BolsasTrabajoResource {
 		}
 
 	}
-
-	// SERVICIO PARA LOGUEARSE
-	@GET
-	@Path("/login/{emailCandidato}/{passwordCandidato}")
-	public Response getCandidato(@PathParam("emailCandidato") String emailCandidato,
-			@PathParam("passwordCandidato") String passwordCandidato) {
-		if (emailCandidato.isEmpty() || passwordCandidato.isEmpty()) {
-			return Response.noContent().build();
-		}
-
-		Candidato c = new Candidato();
-
-		try {
-			Connection cn = SQLConexion.getConexion();
-			CallableStatement cstm = null;
-
-			cstm = cn.prepareCall("{call usp_login_candidato(?,?)}");
-			cstm.setString(1, emailCandidato);
-			cstm.setString(2, passwordCandidato);
-
-			ResultSet rs = cstm.executeQuery();
-
-			while (rs.next()) {
-				c.setSEMAIL(rs.getString(1));
-				c.setSPASSWORD(rs.getString(2));
-				c.setSDOCUMENTO(rs.getString(3));
-				c.setSNOMBRE(rs.getString(4));
-				c.setSAPELLIDOS(rs.getString(5));
-				c.setSFECNACIMIENTO(rs.getString(6));
-				c.setSGENERO(rs.getString(7));
-				c.setNANOSEXPERIENCIA(rs.getInt(8));
-				c.setSESPECIALIDAD(rs.getString(9));
-
-			}
-
-			cn.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		GenericEntity<Candidato> entity = new GenericEntity<Candidato>(c, Candidato.class);
-
-		return Response.ok().entity(entity).build();
-	}
-
+	
 	// SERVICIO PARA LISTAR TODAS LAS OFERTAS
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
