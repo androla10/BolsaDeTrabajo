@@ -7,7 +7,7 @@ public class SQLConexion {
 	private static final String DRIVER_CLASS = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private static final String URL_CONNECTION = "jdbc:sqlserver://localhost:1433;database=BD_BOLSATRABAJO";
 	private static final String USER = "sa";
-	private static final String PASSWORD = "123456";
+	private static final String PASSWORD = "sql";
 	
 	public static Connection getConexion() {
 		Connection con = null;
